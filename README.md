@@ -6,20 +6,20 @@ Stack is a simple way to display your content on your Joomla! site. Present your
 
 ## Features
 
-* Choose the content you want to display, using:
-** Tags
-** Categories
-** Specific IDs
-** Featured
+Choose the content you want to display, using:
+* Tags
+* Categories
+* Specific IDs
+* Featured
 
-* Define the order you want
-** created date
-** published date
-** featured first
-** manual order
-** alphabetical
-** written by
-** Ascending or Descending
+Define the order you want
+* created date
+* published date
+* featured first
+* manual order
+* alphabetical
+* written by
+* Ascending or Descending
 
 - - - 
 
