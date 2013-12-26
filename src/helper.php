@@ -27,23 +27,37 @@ class modStackHelper
     $db       = JFactory::getDbo();
     $user     = JFactory::getUser();
     $groups   = implode(',', $user->getAuthorisedViewLevels());
-    $maximum  = 999; //$params->get('maximum', 5);
+
+    // Preferences
+    $categories = $params->get('categories');
+    $tags       = $params->get('tags');
+    $featured   = $params->get('featured', 0);
+    $maximum    = $params->get('maximum', 5);
+    $order      = $params->get('order', 0);
+    $feature_first = $params->get('featured_first', 0);
+    $direction  = $params->get('direction', 0);
+    $template   = $params->get('template', 'Carousel');
+    $use_js     = $params->get('use_js', 1);
+    $use_css    = $params->get('use_css', 1);
 
     $query = $db->getQuery(true)
-      ->select(
-        'title',
-        'catid',
-        'introtext',
-        'images'
-      )
+      ->select($db->quoteName(array('title', 'catid', 'introtext', 'images')))
       ->from($db->quoteName('#__content'))
       ->order($db->quoteName('created') . ' ' . 'DESC');
 
     $db->setQuery($query, 0, $maximum);
     $results = $db->loadObjectList();
 
-    print_r($results);
-    exit;
+    /*
+    @todo Image processing
+    foreach($results as $index=>$item) {
+      $images = json_decode($item->images);
+
+      print_r($images);
+
+      echo '<hr />';
+    }
+    */
 
     return $results;
   }

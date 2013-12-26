@@ -18,17 +18,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 // Include the syndicate functions only once
 require_once __DIR__ .'/helper.php';
 
+$template = $params->get('template', 'Carousel');
+
 $list = modStackHelper::getList( $params );
-require( JModuleHelper::getLayoutPath( 'mod_stack' ) );
 
 
-
-/*
-
-  title
-  intro text
-  image
-  read more
-
-
- */
+require( JModuleHelper::getLayoutPath( 'mod_stack', $template ) );
