@@ -16,7 +16,19 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 // Include the syndicate functions only once
-require_once( dirname(__FILE__).'/helper.php' );
+require_once __DIR__ .'/helper.php';
 
-$message = modStackHelper::getMessage( $params );
+$list = modStackHelper::getList( $params );
 require( JModuleHelper::getLayoutPath( 'mod_stack' ) );
+
+
+
+/*
+
+  title
+  intro text
+  image
+  read more
+
+
+ */

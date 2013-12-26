@@ -16,13 +16,35 @@ class modStackHelper
 {
 
   /**
-   * Retrieves the hello message
+   * Retrieves a list of content items to display
    *
    * @param array $params An object containing the module parameters
    * @access public
    */
-  public static function getMessage( $params )
+  public static function getList( &$params )
   {
-    return 'Hello, World!';
+
+    $db       = JFactory::getDbo();
+    $user     = JFactory::getUser();
+    $groups   = implode(',', $user->getAuthorisedViewLevels());
+    $maximum  = 999; //$params->get('maximum', 5);
+
+    $query = $db->getQuery(true)
+      ->select(
+        'title',
+        'catid',
+        'introtext',
+        'images'
+      )
+      ->from($db->quoteName('#__content'))
+      ->order($db->quoteName('created') . ' ' . 'DESC');
+
+    $db->setQuery($query, 0, $maximum);
+    $results = $db->loadObjectList();
+
+    print_r($results);
+    exit;
+
+    return $results;
   }
 }

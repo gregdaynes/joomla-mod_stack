@@ -6,7 +6,13 @@
   <name>Stack</name>
   <author>Gregory Daynes</author>
   <version>0.0.1</version>
+  <creationDate>2013-12-25</creationDate>
+  <copyright>Copyright (C) 2013 jEvolve.net. All rights reserved.</copyright>
+  <license>GNU GPL v3</license>
+  <authorEmail>info@jevolve.net</authorEmail>
+  <authorUrl>http://jevovlve.net</authorUrl>
   <description>Display content in various ways. Carousels, columns and grids</description>
+
   <files>
     <filename>mod_stack.xml</filename>
     <filename module="mod_stack">mod_stack.php</filename>
@@ -18,5 +24,36 @@
     <folder>js</folder>
   </media>
 
-  <config></config>
+  <config>
+    <fields>
+      <fieldset name="basic">
+        <field name="Categories"
+               type="category"
+               extension="com_content"
+               label="Select categories"
+               description="Select one or multiple categories to get content items from."
+               multiple="true"
+               class="inputbox span12 small" />
+
+        <field name="tags"
+               type="tag"
+               label="JTAG"
+               description="JTAG_DESC"
+               mode="ajax"
+               class="inputbox span12 small"
+               multiple="true" />
+
+        <field name="featured_only"
+               type="radio"
+               default="0"
+               label="Featured items"
+               description="Only show featured items">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </field>
+      </fieldset>
+
+
+    </fields>
+  </config>
 </extension>
