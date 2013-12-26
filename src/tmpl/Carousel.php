@@ -3,6 +3,8 @@ defined( '_JEXEC' ) or die( 'Restricted access');
 
 $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/mod_stack/css/mod_stack.css');
+$document->addStylesheet(JURI::base() . 'modules/mod_stack/css/mod_stack.css.php', 'text/css', 'screen', $params);
+
 $document->addScript(JURI::base() . 'media/mod_stack/js/picturefill.js');
 $template   = $params->get('template', 'Carousel');
 $moduleclass_sfx = $params->get('moduleclass_sfx', $template);

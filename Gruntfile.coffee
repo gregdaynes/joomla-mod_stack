@@ -61,6 +61,9 @@ module.exports = (grunt) ->
       css:
         files: ['src/**/*.scss', 'src/**/*.css']
         tasks: ['sass', 'autoprefixer', 'copy:css']
+      cssPhp:
+        files: 'src/**/*.css.php'
+        tasks: 'copy:cssPhp'
       php:
         files: ['src/**/*.php', 'src/**/*.html']
         tasks: 'copy:php'

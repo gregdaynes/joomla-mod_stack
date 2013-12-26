@@ -23,4 +23,5 @@ $template = $params->get('template', 'Carousel');
 $list = modStackHelper::getList( $params );
 
 
+
 require( JModuleHelper::getLayoutPath( 'mod_stack', $template ) );
