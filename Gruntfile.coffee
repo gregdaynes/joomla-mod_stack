@@ -46,11 +46,21 @@ module.exports = (grunt) ->
         cwd: 'src/'
         src: '**/*.xml'
         dest: '_build/'
+      jsTmp:
+        expand: true
+        cwd: 'src/js/'
+        src: ['**/*.js', '**/*.coffee']
+        dest: '.tmp/js/'
+      js:
+        expand: true
+        cwd: '.tmp/js/'
+        src: '**/*.js'
+        dest: '_build/media/js'
 
     watch:
       css:
         files: ['src/**/*.scss', 'src/**/*.css']
-        tasks: ['sass', 'autoprefixer']
+        tasks: ['sass', 'autoprefixer', 'copy:css']
       php:
         files: ['src/**/*.php', 'src/**/*.html']
         tasks: 'copy:php'
@@ -67,7 +77,9 @@ module.exports = (grunt) ->
     # compile sass to _build/css
     'sass'
     'autoprefixer'
-    # compile coffeescript to _build/js
+    # compile js to _build/js
+    'copy:jsTmp'
+    'copy:js'
     # copy php from src to _build
     'copy:php'
     'copy:xml'
