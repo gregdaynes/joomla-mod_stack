@@ -59,6 +59,23 @@ class modStackHelper
     }
     */
 
+    /*
+     * process content length
+     */
+    foreach($results as $index=>$item) {
+      $results[$index]->introtext = modStackHelper::truncate($item->introtext, 100);
+    }
+
     return $results;
+  }
+
+  public static function truncate($text, $chars = 25)
+  {
+    $text = $text." ";
+    $text = substr($text,0,$chars);
+    $text = substr($text,0,strrpos($text,' '));
+    $text = $text."...";
+
+    return $text;
   }
 }
