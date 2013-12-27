@@ -82,6 +82,13 @@
                <option value="1">Yes</option>
                </field>
 
+        <field name="truncate"
+               type="text"
+               default="140"
+               label="Text Limit"
+               description="Limit the length of content for the intro text"
+               size="10" />
+
         <field name="direction"
                type="list"
                default="0"

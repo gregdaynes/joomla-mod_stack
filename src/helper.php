@@ -39,6 +39,7 @@ class modStackHelper
     $template   = $params->get('template', 'Carousel');
     $use_js     = $params->get('use_js', 1);
     $use_css    = $params->get('use_css', 1);
+    $truncate   = $params->get('truncate', 140);
 
     $query = $db->getQuery(true)
       ->select($db->quoteName(array('title', 'catid', 'introtext', 'images')))
@@ -63,7 +64,7 @@ class modStackHelper
      * process content length
      */
     foreach($results as $index=>$item) {
-      $results[$index]->introtext = modStackHelper::truncate($item->introtext, 100);
+      $results[$index]->introtext = modStackHelper::truncate($item->introtext, $truncate);
     }
 
     return $results;
