@@ -123,6 +123,24 @@
 
       </fieldset>
 
+      <fieldset name="advanced">
+
+        <field name="breakpoint"
+               type="text"
+               default="480"
+               label="Breakpoint"
+               description="The maximum number of pixels before the carousel turns into a column of content"
+               size="10" />
+
+        <field name="breakpoint_images"
+               type="text"
+               default="480, 768"
+               label="Breakpoint"
+               description="The Miniomum number of pixels before the next image size is used"
+               size="10" />
+
+      </fieldset>
+
 
 
 

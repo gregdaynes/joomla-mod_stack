@@ -4,7 +4,6 @@
   .stack__radio-control {
     box-sizing: border-box;
     display: none;
-    line-height: normal;
     margin: 0px;
     padding: 0px;
   }
@@ -15,6 +14,10 @@
     box-sizing: border-box;
     display: block;
     position: relative;
+  }
+
+  .stack__figure {
+    margin: 0;
   }
 
   .stack__img {
@@ -28,10 +31,7 @@
   .stack__title {
     padding-bottom: 5px;
     border-bottom: 1px solid rgb(221,221,221);
-    font-size: 2em;
-    font-weight: 400;
     margin: 10px 0;
-    text-transform: capitalize;
   }
 
   .stack__link {
@@ -44,101 +44,3 @@
     display: none;
   }
 }
-
-
-@media (min-width: 768px) {
-  .stack--carousel {
-    position: relative;
-
-    .stack__viewport {
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .stack__container {
-      transition: margin 0.3s;
-      display: block;
-      margin-left: 0px;
-      width: 500%;
-    }
-
-    .stack__item {
-      background-color: red;
-      float: left;
-      margin: 0px;
-      padding: 0px;
-      width: 20%;
-    }
-
-    .stack__item figure {
-      margin: 0;
-    }
-
-    .stack__caption {
-      background-color: rgba(0, 0, 0, 0.5);
-      bottom: 0px;
-      color: #fff;
-      padding: 0 10px 10px;
-      position: absolute;
-    }
-
-    .stack__title {
-      border-bottom-style: none;
-      padding: 0px;
-      text-shadow: rgba(0, 0, 0, 0.3) 0px 2px 3px;
-    }
-
-    .stack__img {
-      display: block;
-    }
-
-    .stack__nav {
-      display: block;
-      text-align: center;
-    }
-
-    .stack__nav .button,
-    .stack__nav-item {
-      background-color: transparent;
-      border-style: none;
-      cursor: pointer;
-      font-size: 100%;
-      line-height: normal;
-      margin: 0px;
-      text-transform: none;
-    }
-
-    .stack__nav-next {
-      float: right;
-    }
-
-    .stack__nav-previous {
-      float: left;
-    }
-  }
-}
-
-
-/*
-
-@media (min-width: 768px) {
-
-
-
-  // Slide positioning
-  #item1:checked ~ .stack__viewport .stack__container { margin-left:    0;  }
-  #item2:checked ~ .stack__viewport .stack__container { margin-left: -100%; }
-  #item3:checked ~ .stack__viewport .stack__container { margin-left: -200%; }
-  #item4:checked ~ .stack__viewport .stack__container { margin-left: -300%; }
-  #item5:checked ~ .stack__viewport .stack__container { margin-left: -400%; }
-
-  // slide nav highlighting
-  #item1:checked ~ .stack__nav .stack__nav-item[for=item1],
-  #item2:checked ~ .stack__nav .stack__nav-item[for=item2],
-  #item3:checked ~ .stack__nav .stack__nav-item[for=item3],
-  #item4:checked ~ .stack__nav .stack__nav-item[for=item4],
-  #item5:checked ~ .stack__nav .stack__nav-item[for=item5] {
-    text-decoration: underline
-  }
-}
-*/
