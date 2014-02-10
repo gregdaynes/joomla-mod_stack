@@ -4,14 +4,14 @@
            client="site"
            method="upgrade">
   <name>Stack</name>
-  <author>Gregory Daynes</author>
-  <version>0.0.2</version>
-  <creationDate>2014-02-10</creationDate>
-  <copyright>Copyright (C) 2013-2014 jEvolve.net. All rights reserved.</copyright>
-  <license>GNU GPL v3</license>
-  <authorEmail>info@jevolve.net</authorEmail>
-  <authorUrl>http://jevovlve.net</authorUrl>
-  <description>Display content in various ways. Carousels, columns and grids</description>
+  <author>@@author</author>
+  <version>0.0.3</version>
+  <creationDate>@@creationDate</creationDate>
+  <copyright>@@copyright</copyright>
+  <license>@@license</license>
+  <authorEmail>@@authorEmail</authorEmail>
+  <authorUrl>@@authorUrl</authorUrl>
+  <description>Stack is a simple way to display your content on your Joomla! site. Present your content in a carousel, grid, or just a column of articles.</description>
 
   <files>
     <filename>mod_stack.xml</filename>

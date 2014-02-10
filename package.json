@@ -1,13 +1,16 @@
 {
-  "name": "mod_stack",
-  "version": "0.0.1",
+  "name": "Stack",
+  "version": "0.0.3",
   "description": "Stack is a simple way to display your content on your Joomla! site. Present your content in a carousel, grid, or just a column of articles.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gregdaynes/joomla-mod_stack"
   },
-  "author": "@gregdaynes",
-  "copyright": "Gregory Daynes",
+  "author": "Gregory Daynes (@gregdaynes)",
+  "copyright": "Copyright (C) 2013-2014 jEvolve.net. All rights reserved.",
+  "authorEmail": "info@jevolve.net",
+  "creationDate": "2014-02-10",
+  "authorUrl": "http://jevovlve.net",
   "license": "GPL v3",
   "bugs": {
     "url": "https://github.com/gregdaynes/joomla-mod_stack/issues"
@@ -33,6 +36,8 @@
     "grunt-webfont": "~0.3.2",
     "grunt-shell": "~0.6.4",
     "grunt-jekyll": "~0.4.1",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-xmlpoke": "~0.3.0",
+    "grunt-replace": "~0.6.1"
   }
 }
