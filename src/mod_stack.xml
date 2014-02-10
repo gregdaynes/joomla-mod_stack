@@ -28,6 +28,10 @@
     <fields name="params">
       <fieldset name="basic">
 
+        <field name="itemid"
+               type="text"
+               label="Menu ID"
+               description="Menu id to use for link" />
         <field name="categories"
                type="category"
                extension="com_content"
@@ -145,6 +149,13 @@
                label="Breakpoint"
                description="The Miniomum number of pixels before the next image size is used"
                size="10" />
+
+        <field
+					name="moduleclass_sfx"
+					type="textarea" rows="3"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+
 
       </fieldset>
 

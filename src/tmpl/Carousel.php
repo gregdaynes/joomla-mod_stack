@@ -2,67 +2,75 @@
 defined( '_JEXEC' ) or die( 'Restricted access');
 
 $document = JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'media/mod_stack/css/mod_stack.css');
 
-$document->addScript(JURI::base() . 'media/mod_stack/js/picturefill.js');
+if ($params->get('use_js', true)) {
+  $document->addScript(JURI::base() . 'media/mod_stack/js/picturefill.js');
+}
+
+if ($params->get('use_css', true)) {
+  $document->addStyleSheet(JURI::base() . 'media/mod_stack/css/mod_grid.css');
+}
+
 $template   = $params->get('template', 'Carousel');
 $moduleclass_sfx = $params->get('moduleclass_sfx', $template);
+
 
 $breakpoint = $params->get('breakpoint', 480);
 $breakpoint_images = $params->get('breakpoint_images', array(480, 768));
 $item_count = count($list);
 
+/*
 $style = '
 @media (min-width: '.$breakpoint.'px) {
-  .stack--carousel {
+  .'.$moduleclass_sfx.' {
     position: relative;
   }
 
-  .stack--carousel .stack__viewport {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__viewport {
     overflow-x: hidden;
     width: 100%;
   }
 
-  .stack--carousel .stack__container {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__container {
     transition: margin 0.3s;
     display: block;
     margin-left: 0px;
     width: '. 100 * $item_count . '%;
   }
 
-  .stack--carousel .stack__item {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__item {
     float: left;
     margin: 0px;
     padding: 0px;
     width: ' . 100 / $item_count . '%;
   }
 
-  .stack--carousel .stack__item figure {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__item figure {
     margin: 0;
   }
 
-  .stack--carousel .stack__caption {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__caption {
     top: 100%;
     padding: 0 10px 10px;
     width: 100%;
   }
 
-  .stack--carousel .stack__title {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__title {
     border-bottom-style: none;
     padding: 0px;
   }
 
-  .stack--carousel .stack__img {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__img {
     display: block;
   }
 
-  .stack--carousel .stack__nav {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav {
     display: block;
     text-align: center;
   }
 
-  .stack--carousel .stack__nav .button,
-  .stack--carousel .stack__nav-item {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav .button,
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-item {
     background-color: transparent;
     border-style: none;
     cursor: pointer;
@@ -70,11 +78,11 @@ $style = '
     display: inline-block;
   }
 
-  .stack--carousel .stack__nav-next {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-next {
     float: right;
   }
 
-  .stack--carousel .stack__nav-previous {
+  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-previous {
     float: left;
   }
 
@@ -83,11 +91,11 @@ $style = '
 
 $style_actions  = '@media (min-width: '.$breakpoint.'px) {'."\n";
 foreach($list as $index=>$item) {
-  $style_actions .= '#stack--' . $moduleclass_sfx . '__item' . $index . ':checked ~ .stack__viewport .stack__container { margin-left: ' . ($index * 100 * -1) .'%; }'."\n";
+  $style_actions .= '#'.$moduleclass_sfx.'__item' . $index . ':checked ~ .'.$moduleclass_sfx.'__viewport .'.$moduleclass_sfx.'__container { margin-left: ' . ($index * 100 * -1) .'%; }'."\n";
 }
 $items = array();
 foreach($list as $index=>$item) {
-  $item_index = '#stack--' . $moduleclass_sfx . '__item' . $index . ':checked ~ .stack__nav .stack__nav-item[for=stack--' . $moduleclass_sfx . '__item' . $index;
+  $item_index = '#' . $moduleclass_sfx . '__item' . $index . ':checked ~ .'.$moduleclass_sfx.'__nav .'.$moduleclass_sfx.'__nav-item[for='.$moduleclass_sfx.'__item' . $index.']';
   $items[] = $item_index;
 }
 
@@ -97,41 +105,34 @@ $style_actions .= '}';
 
 $document->addStyleDeclaration( $style );
 $document->addStyleDeclaration( $style_actions );
+*/
+
 
 ?>
 
 
 
 
-<div class="stack  stack--carousel stack--<?php echo $moduleclass_sfx; ?>">
 
   <?php foreach($list as $index=>$item) : ?>
-  <input type="radio" name="stack--<?php echo $moduleclass_sfx; ?>" id="stack--<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>" class="stack__radio-control" <?php if ($index == 0) : ?>checked<?php endif; ?> />
+  <input type="radio" name="<?php echo trim($moduleclass_sfx); ?>" id="<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>" class="<?php echo trim($moduleclass_sfx); ?>__radio-control" <?php if ($index == 0) : ?>checked<?php endif; ?> />
   <?php endforeach; ?>
 
-  <div class="stack__viewport">
-    <div class="stack__container">
+  <div class="<?php echo $moduleclass_sfx; ?>__viewport">
+    <div class="<?php echo $moduleclass_sfx; ?>__container">
 
       <?php foreach($list as $index=>$item) : ?>
 
-      <article class="stack__item">
-        <figure class="stack__figure">
-          <div class="stack__img-wrapper">
-            <span class="stack__img" data-picture data-alt="<!-- $img-alt | Alt Text -->">
-              <span data-src="http://placehold.it/480x270"></span>
-              <span data-src="http://placehold.it/569x320" data-media="(min-width: 480px)"></span>
-              <span data-src="http://placehold.it/853x480" data-media="(min-width: 768px)"></span>
-
-              <noscript>
-                  <img src="http://placehold.it/480x270" alt="<!-- $img-alt | Alt Text -->">
-              </noscript>
-            </span>
+      <article class="<?php echo $moduleclass_sfx; ?>__item">
+        <figure class="<?php echo trim($moduleclass_sfx); ?>__figure">
+          <div class="<?php echo trim($moduleclass_sfx); ?>__img-wrapper">
+            <img src="<?php echo $item->introimage['image']; ?>" alt="<?php echo $item->introimage['alt']; ?>"/>
           </div>
 
-          <figcaption class="stack__caption">
-            <h1 class="stack__title"><?php echo $item->title; ?></h1>
-            <p class="stack__text"><?php echo $item->introtext; ?></p>
-            <a class="stack__link" href="#">Read More&hellip;</a>
+          <figcaption class="<?php echo trim($moduleclass_sfx); ?>__caption">
+            <h1 class="<?php echo trim($moduleclass_sfx); ?>__title"><?php echo $item->title; ?></h1>
+            <p class="<?php echo trim($moduleclass_sfx); ?>__text"><?php echo $item->introtext; ?></p>
+            <a class="<?php echo trim($moduleclass_sfx); ?>__link" href="<?php echo $item->link; ?>">Read More&hellip;</a>
           </figcaption>
         </figure>
       </article>
@@ -141,15 +142,18 @@ $document->addStyleDeclaration( $style_actions );
     </div>
   </div>
 
-  <nav class="stack__nav">
+  <nav class="<?php echo trim($moduleclass_sfx); ?>__nav">
 
     <h3 class="section-header"><?php echo $module->title; ?> Navigation</h3>
+    <ul>
 
+
+
+    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-previous"><button class="<?php echo trim($moduleclass_sfx); ?>__nav-previous    js-carousel-button-previous"><span>Previous Slide</span></button></li>
     <?php foreach($list as $index=>$item) : ?>
-    <label class="stack__nav-item" for="stack--<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>"><?php echo $index + 1; ?></label>
+      <li class="<?php echo trim($moduleclass_sfx); ?>__nav-item"><label for="<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>" class="<?php echo trim($moduleclass_sfx); ?>__nav-item"><?php echo $index + 1; ?></label></li>
     <?php endforeach; ?>
+    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-next"><button class="<?php echo trim($moduleclass_sfx); ?>__nav-next    js-carousel-button-next"><span>Next Slide</span></button></li>
+</ul>
 
-    <button class="stack__nav-previous  js-carousel-button-previous">Previous Item</button>
-    <button class="stack__nav-next      js-carousel-button-next">Next Item</button>
   </nav>
-</div>
