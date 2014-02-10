@@ -5,9 +5,9 @@
            method="upgrade">
   <name>Stack</name>
   <author>Gregory Daynes</author>
-  <version>0.0.1</version>
-  <creationDate>2013-12-25</creationDate>
-  <copyright>Copyright (C) 2013 jEvolve.net. All rights reserved.</copyright>
+  <version>0.0.2</version>
+  <creationDate>2014-02-10</creationDate>
+  <copyright>Copyright (C) 2013-2014 jEvolve.net. All rights reserved.</copyright>
   <license>GNU GPL v3</license>
   <authorEmail>info@jevolve.net</authorEmail>
   <authorUrl>http://jevovlve.net</authorUrl>
