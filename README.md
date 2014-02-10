@@ -48,7 +48,7 @@ Define the order you want
 ## FAQs
 
 1. Isn’t this just another carousel module?
-1. * Yep.
++ + Yep.
 
 2. Why?
-2. * Because I am tired of changing the modules out there to fit my needs. This is a very specialized version, suited to fit my needs, and the needs of Inside Golf Magazine and their affiliated websites.
++ + Because I am tired of changing the modules out there to fit my needs. This is a very specialized version, suited to fit my needs, and the needs of Inside Golf Magazine and their affiliated websites.
