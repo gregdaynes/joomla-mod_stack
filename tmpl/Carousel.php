@@ -4,7 +4,9 @@ defined( '_JEXEC' ) or die( 'Restricted access');
 $document = JFactory::getDocument();
 
 if ($params->get('use_js', true)) {
-  $document->addScript(JURI::base() . 'media/mod_stack/js/picturefill.js');
+  $document->addScript('modules/mod_stack/media/js/devUtility.js');
+/*   $document->addScript(JURI::base() . 'media/mod_stack/js/picturefill.js'); */
+  $document->addScript('modules/mod_stack/media/js/responsiveSlider.js');
 }
 
 if ($params->get('use_css', true)) {
@@ -19,23 +21,15 @@ $breakpoint = $params->get('breakpoint', 480);
 $breakpoint_images = $params->get('breakpoint_images', array(480, 768));
 $item_count = count($list);
 
-/*
+
 $style = '
 @media (min-width: '.$breakpoint.'px) {
-  .'.$moduleclass_sfx.' {
-    position: relative;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__viewport {
-    overflow-x: hidden;
-    width: 100%;
-  }
 
   .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__container {
     transition: margin 0.3s;
     display: block;
     margin-left: 0px;
-    width: '. 100 * $item_count . '%;
+    width: '. 100 * $item_count . '% !important;
   }
 
   .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__item {
@@ -44,48 +38,6 @@ $style = '
     padding: 0px;
     width: ' . 100 / $item_count . '%;
   }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__item figure {
-    margin: 0;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__caption {
-    top: 100%;
-    padding: 0 10px 10px;
-    width: 100%;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__title {
-    border-bottom-style: none;
-    padding: 0px;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__img {
-    display: block;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav {
-    display: block;
-    text-align: center;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav .button,
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-item {
-    background-color: transparent;
-    border-style: none;
-    cursor: pointer;
-    margin: 0px;
-    display: inline-block;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-next {
-    float: right;
-  }
-
-  .'.$moduleclass_sfx.' .'.$moduleclass_sfx.'__nav-previous {
-    float: left;
-  }
-
 
 }';
 
@@ -105,14 +57,13 @@ $style_actions .= '}';
 
 $document->addStyleDeclaration( $style );
 $document->addStyleDeclaration( $style_actions );
-*/
 
 
 ?>
 
 
 
-
+<div class="js-carousel" id="<?php echo $moduleclass_sfx; ?>">
 
   <?php foreach($list as $index=>$item) : ?>
   <input type="radio" name="<?php echo trim($moduleclass_sfx); ?>" id="<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>" class="<?php echo trim($moduleclass_sfx); ?>__radio-control" <?php if ($index == 0) : ?>checked<?php endif; ?> />
@@ -130,9 +81,17 @@ $document->addStyleDeclaration( $style_actions );
           </div>
 
           <figcaption class="<?php echo trim($moduleclass_sfx); ?>__caption">
-            <h1 class="<?php echo trim($moduleclass_sfx); ?>__title"><?php echo $item->title; ?></h1>
-            <p class="<?php echo trim($moduleclass_sfx); ?>__text"><?php echo $item->introtext; ?></p>
-            <a class="<?php echo trim($moduleclass_sfx); ?>__link" href="<?php echo $item->link; ?>">Read More&hellip;</a>
+            <?php if ($params->get('show_title', true)) : ?>
+              <h1 class="<?php echo trim($moduleclass_sfx); ?>__title"><?php echo $item->content_title; ?></h1>
+            <?php endif; ?>
+
+            <?php if ($params->get('show_intro-text', true)) : ?>
+              <p class="<?php echo trim($moduleclass_sfx); ?>__text"><?php echo $item->content_introtext; ?></p>
+            <?php endif; ?>
+
+            <?php if ($params->get('show_read-more', true)) : ?>
+              <a class="<?php echo trim($moduleclass_sfx); ?>__link" href="<?php echo $item->link; ?>">Read More&hellip;</a>
+            <?php endif; ?>
           </figcaption>
         </figure>
       </article>
@@ -149,11 +108,22 @@ $document->addStyleDeclaration( $style_actions );
 
 
 
-    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-previous"><button class="<?php echo trim($moduleclass_sfx); ?>__nav-previous    js-carousel-button-previous"><span>Previous Slide</span></button></li>
+    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-previous">
+      <button id="<?php echo trim($moduleclass_sfx); ?>__nav-previous"  class="<?php echo trim($moduleclass_sfx); ?>__nav-previous    js-<?php echo trim($moduleclass_sfx); ?>-button-previous"><span>Previous Slide</span></button></li>
     <?php foreach($list as $index=>$item) : ?>
       <li class="<?php echo trim($moduleclass_sfx); ?>__nav-item"><label for="<?php echo $moduleclass_sfx; ?>__item<?php echo $index; ?>" class="<?php echo trim($moduleclass_sfx); ?>__nav-item"><?php echo $index + 1; ?></label></li>
     <?php endforeach; ?>
-    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-next"><button class="<?php echo trim($moduleclass_sfx); ?>__nav-next    js-carousel-button-next"><span>Next Slide</span></button></li>
+    <li class="<?php echo trim($moduleclass_sfx); ?>__nav-next"><button id="<?php echo trim($moduleclass_sfx); ?>__nav-next"  class="<?php echo trim($moduleclass_sfx); ?>__nav-next    js-<?php echo trim($moduleclass_sfx); ?>-button-next"><span>Next Slide</span></button></li>
 </ul>
 
   </nav>
+</div>
+<script>
+  var responsiveSlider = new ResponsiveSlider({
+       'element': document.getElementById('<?php echo trim($moduleclass_sfx); ?>'),
+        'radios': document.getElementsByClassName('<?php echo trim($moduleclass_sfx); ?>__radio-control'),
+    'nextButton': document.getElementById('<?php echo trim($moduleclass_sfx); ?>__nav-next'),
+'previousButton': document.getElementById('<?php echo trim($moduleclass_sfx); ?>__nav-previous'),
+      'interval': <?php echo $params->get('interval', 5) * 1000; ?>
+  }).action('start');
+</script>

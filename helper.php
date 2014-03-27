@@ -25,8 +25,8 @@ class modStackHelper
    */
   public static function getList( &$params )
   {
-  
-  
+
+
 
     $db       = JFactory::getDbo();
     $user     = JFactory::getUser();
@@ -34,8 +34,9 @@ class modStackHelper
 
     // Preferences
     $categories = $params->get('categories');
+    $not_categories = $params->get('not_categories');
     $tags       = $params->get('tags');
-    $featured   = $params->get('featured', 0);
+    $featured   = $params->get('featured_only', 0);
     $maximum    = $params->get('maximum', 5);
     $order      = $params->get('order', 0);
     $feature_first = $params->get('featured_first', 0);
@@ -45,55 +46,137 @@ class modStackHelper
     $use_css    = $params->get('use_css', 1);
     $truncate   = $params->get('truncate', 140);
     $itemid     = $params->get('itemid', false);
-    
+    $offset     = $params->get('offset', 0);
+
     $access = !JComponentHelper::getParams('com_content')->get('show_noauth');
     $authorised = JAccess::getAuthorisedViewLevels(JFactory::getUser()->get('id'));
 
-    // Query
+    // SELECT
+    $qSelect = array();
+    $qFrom = array();
+    $qJoin = array();
+    $qWhere = array();
+    $qOrder = array();
+    $qLimit = array();
 
-    // published / archived
-    $conditions = $db->quoteName('state') . ' >= ' . 1;
+    $qSelect[] = $db->quoteName( 'content.id', 'content_id' );
+    $qSelect[] = $db->quoteName( 'content.title', 'content_title' );
+    $qSelect[] = $db->quoteName( 'content.alias', 'content_alias' );
+    $qSelect[] = $db->quoteName( 'content.introtext', 'content_introtext' );
+    $qSelect[] = $db->quoteName( 'content.fulltext', 'content_fulltext' );
+    $qSelect[] = $db->quoteName( 'content.images', 'content_images' );
 
-    // Multiple categories to search for
-    $conditions .= ' AND (';
-    foreach($categories as $index=>$category) {
-      $conditions_or[] = $db->quoteName('catid') . ' = ' . $category;
+
+    $qFrom[] = $db->quoteName('#__content', 'content');
+
+    // join category alias to content item for router
+    $qSelect[] = $db->quoteName( 'category.id', 'category_id');
+    $qSelect[] = $db->quoteName( 'category.alias', 'category_alias');
+    $qJoin[] = array('direction' => 'LEFT',
+                     'table'     => $db->quoteName('#__categories', 'category'),
+                     'on' => $db->quoteName('content.catid').' = '.$db->quoteName('category.id'));
+
+    if ($categories)
+    {
+      if (count($categories) > 1) {
+        $qWhere[] = '('.$db->quoteName('category.id').' = '.implode(' OR '.$db->quoteName('category.id').' = ', $categories).')';
+      } else {
+        $qWhere[] = $db->quoteName('category.id').' = '. $categories[0];
+      }
     }
-    $conditions .= implode($conditions_or, ' OR ');
-    $conditions .= ')';
-    
-    
-    $query = 'SELECT '
-             . $db->quoteName( 'content.id' )
-         .','. $db->quoteName( 'content.alias' )
-         .','. $db->quoteName( 'content.title' )
-         .','. $db->quoteName( 'content.catid' )
-         .','. $db->quoteName( 'content.introtext' )
-         .','. $db->quoteName( 'content.fulltext' )
-         .','. $db->quoteName( 'content.images' )
-         .','. $db->quoteName( 'content.access' )
-         .','. $db->quoteName( 'cat.id' )
-                 . ' AS category_id'
-         .','. $db->quoteName( 'cat.alias' )
-                 . ' AS category_alias'
-       .' '. 'FROM '
-               . $db->quoteName('#__content', 'content')
-       .' '. 'RIGHT JOIN '
-               . $db->quoteName('#__categories', 'cat')
-                 . ' ON '. $db->quoteName('content.catid') . ' = ' . $db->quoteName('cat.id')
-       .' '. 'WHERE '
-             . $conditions
-       .' '. 'ORDER BY '
-             . $db->quoteName('content.created') . ' DESC'
-       .' '. 'LIMIT 0, ' . $maximum
-    ;
-    
-    // build query and return it
-    $db->setQuery($query);    
-    
 
-//     var_dump($db->replacePrefix((string) $db->getQuery())); 
-//     exit; 
+
+
+    if ($not_categories)
+    {
+      if (count($not_categories) > 1) {
+        $qWhere[] = '('.$db->quoteName('category.id').' != '.implode(' AND '.$db->quoteName('category.id').' != ', $not_categories).')';
+      } else {
+        $qWhere[] = $db->quoteName('category.id').' != '. $not_categories[0];
+      }
+    }
+
+    if ($tags)
+    {
+      $qJoin[] = array('direction' => 'LEFT',
+                       'table'     => $db->quoteName('#__contentitem_tag_map', 'content_tag'),
+                       'on'        => $db->quoteName('content_tag.content_item_id').' = '.$db->quoteName('content.id'));
+      if (count($tags) > 1) {
+        $qWhere[] = '('.$db->quoteName('content_tag.tag_id').' = '.implode(' OR '.$db->quoteName('content_tag.tag_id').' = ', $tags).')';
+      }
+      $qWhere[] = $db->quoteName('content_tag.tag_id').' = '. $tags[0];
+    }
+
+    // featured only
+    if ($featured) {
+      $qWhere[] = $db->quoteName('content.featured').' = 1';
+    }
+
+    // featured first
+    if ($feature_first) {
+      $qOrder[] = $db->quoteName('content.featured').' DESC';
+    }
+
+
+    // ordering
+    if ($direction == 0) { $direction = 'ASC'; }
+    if ($direction == 1) { $direction = 'DESC'; }
+    if ($order == 0) { $order = 'ordering'; }
+    if ($order == 1) { $order = 'title'; }
+    if ($order == 2) { $order = 'created'; }
+    if ($order == 3) { $order = 'publish_up'; }
+    if ($order)
+    {
+      $qOrder[] = $db->quoteName('content.'.$order).' '.$direction;
+    }
+
+    $qLimit['offset'] = $offset;
+
+    if ($maximum)
+    {
+      $qLimit['limit'] = $maximum;
+    }
+
+
+    $qJoins = array();
+    foreach($qJoin as $join) {
+      $qJoins[] = $join['direction'].' JOIN '.$join['table'].' ON '.$join['on'];
+    }
+
+/*     print_r($qSelect); */
+/*     print_r($qFrom); */
+/*     print_r($qJoins); */
+/*     print_r($qWhere); */
+/*     print_r($qOrder); */
+/*     print_r($qLimit); */
+
+
+    $query = '';
+    if (!$qSelect) { return; }
+    $query .= 'SELECT '.implode(',', $qSelect);
+    if (!$qFrom) { return; }
+    $query .= ' FROM '.implode(',', $qFrom);
+
+    if ($qJoins) {
+      $query .= ' '.implode(' ', $qJoins);
+    }
+    if ($qWhere) {
+      $query .= ' WHERE '.implode(' AND ', $qWhere);
+    }
+    if ($qOrder) {
+      $query .= ' ORDER BY '.implode(', ', $qOrder);
+    }
+    $query .= ' LIMIT '.implode(', ', $qLimit);
+
+
+
+
+    // build query and return it
+    $db->setQuery($query);
+
+
+/*     var_dump($db->replacePrefix((string) $db->getQuery())); */
+/*     exit; */
 
     $results = $db->loadObjectList();
 
@@ -104,21 +187,31 @@ class modStackHelper
 
     // remove images from item
     foreach($results as $index=>$item) {
-      $results[$index]->introtext = modStackHelper::removeImages($item->introtext);
+      $results[$index]->content_introtext = modStackHelper::removeImages($item->content_introtext);
+    }
+
+    // remove tags from item
+    foreach($results as $index=>$item) {
+      $results[$index]->content_introtext = strip_tags($item->content_introtext);
     }
 
 
     /*
      * process content length
      */
-    foreach($results as $index=>$item) {
-      $results[$index]->introtext = modStackHelper::truncate($item->introtext, $truncate);
+    if ($truncate > 0) {
+      foreach($results as $index=>$item) {
+        $results[$index]->content_introtext = modStackHelper::truncate($item->content_introtext, $truncate);
+      }
+
     }
-    
-    
+
+
+
     foreach($results as $index=>$item) {
-      $item->slug = $item->id . ':' . $item->alias;
-			$item->catslug = $item->category_id . ':' . $item->category_alias;
+      $item->slug = $item->content_id . ':' . $item->content_alias;
+        $item->catslug = $item->category_id . ':' . $item->category_alias;
+
 
 			if ($access || in_array($item->access, $authorised))
 			{
@@ -135,7 +228,7 @@ class modStackHelper
       {
       	$item->link = JRoute::_('index.php?option=com_users&view=login');
       }
-        
+
     }
 
 
@@ -148,7 +241,7 @@ class modStackHelper
     $needles = array(
 			'article'  => array((int) $id)
 		);
-		
+
 		//Create the link
 		$link = 'index.php?option=com_content&view=article&id='. $id;
 		if ((int) $catid > 1)
@@ -176,22 +269,33 @@ class modStackHelper
 		$link .= '&Itemid='.$itemid;
 
 		return $link;
-	
+
   }
 
   public static function truncate($text, $chars = 25)
   {
+    $trunc = false;
+    if (strlen($text) >= $chars) {
+      $trunc = true;
+    }
+
+
     $text = $text." ";
     $text = substr($text,0,$chars);
     $text = substr($text,0,strrpos($text,' '));
-    $text = $text."...";
+
+    if ($trunc == true) {
+      $text = trim($text)."&hellip;";
+    }
+
+
 
     return $text;
   }
 
   public static function findImage($item)
   {
-    $images = json_decode($item->images);
+    $images = json_decode($item->content_images);
 
     /*
     $image_intro
@@ -240,7 +344,7 @@ class modStackHelper
 
 
       if (!$matches) {
-        preg_match($pattern, $item->introtext, $intro_matches);
+        preg_match($pattern, $item->content_introtext, $intro_matches);
 
         if ($intro_matches) {
           $matches = $intro_matches;
@@ -250,7 +354,7 @@ class modStackHelper
 
 
       if (!$matches) { // found one
-        preg_match($pattern, $item->fulltext, $fulltext_matches);
+        preg_match($pattern, $item->content_fulltext, $fulltext_matches);
         if ($fulltext_matches) {
           $matches = $fulltext_matches;
         }

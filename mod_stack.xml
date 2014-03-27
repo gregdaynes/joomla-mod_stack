@@ -32,11 +32,20 @@
                type="text"
                label="Menu ID"
                description="Menu id to use for link" />
+
         <field name="categories"
                type="category"
                extension="com_content"
                label="Select categories"
                description="Select one or multiple categories to get content items from."
+               multiple="true"
+               class="inputbox span12 small" />
+
+        <field name="not_categories"
+               type="category"
+               extension="com_content"
+               label="Not These Categories"
+               description="Select one or multiple categories to ignore content items in."
                multiple="true"
                class="inputbox span12 small" />
 
@@ -68,7 +77,7 @@
 
         <field name="order"
                type="list"
-               default="0"
+               default="title"
                label="Order"
                description="Order of items">
                <option value="0">Ordering</option>
@@ -131,6 +140,39 @@
                <option value="0">No</option>
                <option value="1">Yes</option>
                </field>
+
+        <field name="show_title"
+               type="radio"
+               default="1"
+               label="Show Title"
+               description="">
+               <option value="0">No</option>
+               <option value="1">Yes</option>
+               </field>
+
+        <field name="show_intro-text"
+               type="radio"
+               default="1"
+               label="Show Intro Text"
+               description="">
+               <option value="0">No</option>
+               <option value="1">Yes</option>
+               </field>
+
+        <field name="show_read-more"
+               type="radio"
+               default="1"
+               label="Show Read More"
+               description="">
+               <option value="0">No</option>
+               <option value="1">Yes</option>
+               </field>
+
+        <field name="interval"
+               type="text"
+               default="5"
+               label="Rotation Interval"
+               description="" />
 
       </fieldset>
 

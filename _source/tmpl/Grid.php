@@ -37,8 +37,8 @@ $item_count = count($list);
       </div>
 
       <figcaption class="<?php echo trim($moduleclass_sfx); ?>__caption">
-        <h1 class="<?php echo trim($moduleclass_sfx); ?>__title"><?php echo $item->title; ?></h1>
-        <p class="<?php echo trim($moduleclass_sfx); ?>__text"><?php echo $item->introtext; ?></p>
+        <h1 class="<?php echo trim($moduleclass_sfx); ?>__title"><?php echo $item->content_title; ?></h1>
+        <div class="<?php echo trim($moduleclass_sfx); ?>__text"><?php echo $item->content_introtext; ?></div>
         <a class="<?php echo trim($moduleclass_sfx); ?>__link" href="<?php echo $item->link; ?>">Read More&hellip;</a>
       </figcaption>
     </figure>

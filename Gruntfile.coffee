@@ -11,13 +11,14 @@ module.exports = (grunt) ->
       xml: {
         options: {
           expression: false
-          
+          force: true
+
           patterns: [
             {
               match: 'name'
               replacement: '<%= pkg.name %>'
             },
-            { 
+            {
               match: 'version'
               replacement: '<%= pkg.version %>'
             },
@@ -49,15 +50,16 @@ module.exports = (grunt) ->
               match: 'description'
               replacement: '<%= pkg.license %>'
             }
-            
+
           ]
         }
         files: [
           {
-            expand: true
-            flatten: true
-            src: '_source/mod_stack.xml'
-            dest: ''
+            expand: true,
+            flatten: true,
+            cwd: '_source/',
+            src: ['**/*.xml'],
+            dest: '.tmp'
           }
         ]
       }
@@ -86,6 +88,33 @@ module.exports = (grunt) ->
         src: '**/*.css'
         dest: '.tmp/css/'
 
+    coffee:
+      options:
+        sourceMap: true
+        bare: true
+      compile:
+        expand: true,
+        flatten: true,
+        cwd: '.tmp/js',
+        src: ['*.coffee'],
+        dest: '.tmp/js',
+        ext: '.js'
+
+    uglify:
+      options:
+        preserveComments: 'some'
+        report: 'gzip'
+        compress:
+          global_defs:
+            "DEBUG": false
+          dead_code: true
+      build:
+        expand: true
+        flatten: true
+        cwd: '.tmp/js/'
+        src: '*.js'
+        dest: '.tmp/js'
+
     copy:
       css:
         expand: true
@@ -107,6 +136,11 @@ module.exports = (grunt) ->
         cwd: '.tmp/js/'
         src: '**/*.js'
         dest: 'media/js'
+      xml:
+        expand: true
+        cwd: '.tmp/'
+        src: ['**/*.xml']
+        dest: '';
 
     watch:
       css:
@@ -120,7 +154,7 @@ module.exports = (grunt) ->
         tasks: 'copy:php'
       xml:
         files: ['_source/**/*.xml']
-        tasks: 'replace:xml'
+        tasks: ['replace:xml', 'copy:xml']
 
     # release
 
@@ -128,27 +162,15 @@ module.exports = (grunt) ->
   require("load-grunt-tasks") grunt
 
   grunt.registerTask 'default', [
-    # compile sass to _build/css
     'sass'
     'autoprefixer'
-    # compile js to _build/js
     'copy:jsTmp'
+    'coffee:compile'
+    'uglify:build'
     'copy:js'
-    # copy php from src to _build
     'copy:php'
-    # 'copy:xml'
     'copy:css'
     'replace:xml'
+    'copy:xml'
     'watch'
-  ]
-
-
-  grunt.registerTask 'release', [
-    # copy build folder to release
-    # compress images
-    # compress icons
-    # compress css
-    # compress js
-    # add copyrights to js/css
-    # tar.gz bundle - name as version - to desktop
   ]
